@@ -15,7 +15,7 @@ module.exports = {
 				id: 'host',
 				label: 'Projector IP Address',
 				width: 6,
-				default: '192.168.0.1',
+				default: '192.168.1.190',
 				regex: Regex.IP,
 			},
 			{
