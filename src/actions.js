@@ -13,17 +13,12 @@ module.exports = {
 					default: 'ON',
 					choices: [
 						{ id: 'ON', label: 'Power On' },
-						{ id: 'OFF', label: 'Power Off (Press twice to power off)' },
+						{ id: 'OFF', label: 'Power Off' },
 					]
 				}
 			],
 			callback: async function (action) {
-				if (action.options.powerAction == 'ON') {
-					self.sendCommand('IMPWR=ON');
-				}
-				else if (action.options.powerAction == 'OFF') {
-					self.sendCommand('KEY=6C');
-				}
+					self.sendCommand('PWR+' + action.options.powerAction);
 			}
 		};
 		
@@ -47,7 +42,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('SOURCE=' + action.options.sourceId);
+				self.sendCommand('SOURCE+' + action.options.sourceId);
 			}
 		};
 		
@@ -66,7 +61,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('MUTE=' + action.options.avMuteAction);
+				self.sendCommand('MUTE+' + action.options.avMuteAction);
 			}
 		};
 		
@@ -85,7 +80,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('FREEZE=' + action.options.freezeAction);
+				self.sendCommand('FREEZE+' + action.options.freezeAction);
 			}
 		};
 		
@@ -94,15 +89,15 @@ module.exports = {
 			options: [
 				{
 					type: 'number',
-					label: 'brightness (30-100)',
+					label: 'brightness (0-255)',
 					id: 'brightness',
-					min: 30,
-					max: 100,
+					min: 0,
+					max: 255,
 					required: true
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('_OSD_IMLUMLEVEL=' + action.options.brightness);
+				self.sendCommand('LUMLEVEL+' + action.options.brightness);
 			}
 		};
 		
@@ -126,15 +121,15 @@ module.exports = {
 					required: false
 				}
 			],
-			callback: async function (action) {
+			callback: async function (action) { //REVISAR
 				const fadeInTime = action.options.fadeIn * 20
 				const fadeOutTime = action.options.fadeOut * 20
 
 				if (fadeInTime) {
-					self.sendCommand('FADEIN=' + fadeInTime + (fadeOutTime ? ('&FADEOUT=' + fadeOutTime) : ''));
+					self.sendCommand('FADEIN+' + fadeInTime + (fadeOutTime ? ('&FADEOUT=' + fadeOutTime) : ''));
 				}
 				else if (fadeOutTime) {
-					self.sendCommand('FADEOUT=' + fadeOutTime);
+					self.sendCommand('FADEOUT+' + fadeOutTime);
 				}
 			}
 		};
@@ -148,26 +143,26 @@ module.exports = {
 					id: 'patternId',
 					default: '2002',
 					choices: [
-						{ id: '2002', label: 'Standard' },
-						{ id: '2003', label: 'Cross-hatching' },
-						{ id: '200D', label: 'Cross-hatching R' },
-						{ id: '200E', label: 'Cross-hatching G' },
-						{ id: '200F', label: 'Cross-hatching B' },
-						{ id: '2004', label: 'Color Bars V' },
-						{ id: '2010', label: 'Color Bars H' },
-						{ id: '2005', label: 'Grayscale' },
-						{ id: '2012', label: 'Gray Bars V' },
-						{ id: '2013', label: 'Gray Bars H' },
-						{ id: '200B', label: 'Checkerboard 1' },
-						{ id: '200C', label: 'Checkerboard 2' },
-						{ id: '2006', label: 'White' },
-						{ id: '2011', label: 'Black' },
-						{ id: '2014', label: 'Aspect Frame' },
+						{ id: '02', label: 'Standard' },
+						{ id: '03', label: 'Cross-hatching' },
+						{ id: '0D', label: 'Cross-hatching R' },
+						{ id: '0E', label: 'Cross-hatching G' },
+						{ id: '0F', label: 'Cross-hatching B' },
+						{ id: '04', label: 'Color Bars V' },
+						{ id: '10', label: 'Color Bars H' },
+						{ id: '05', label: 'Grayscale' },
+						{ id: '12', label: 'Gray Bars V' },
+						{ id: '13', label: 'Gray Bars H' },
+						{ id: '0B', label: 'Checkerboard 1' },
+						{ id: '0C', label: 'Checkerboard 2' },
+						{ id: '06', label: 'White' },
+						{ id: '11', label: 'Black' },
+						{ id: '14', label: 'Aspect Frame' },
 					]
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('TESTPATTERN=01%' + action.options.patternId);
+				self.sendCommand('TESTPATTERN+01+' + action.options.patternId);
 			}
 		};
 		
@@ -175,7 +170,7 @@ module.exports = {
 			name: 'Hide Test Pattern',
 			options: [],
 			callback: async function (action) {
-				self.sendCommand('TESTPATTERN=00');
+				self.sendCommand('TESTPATTERN+00');
 			}
 		};
 		
@@ -202,7 +197,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('POPLP=' + action.options.loadSlot);
+				self.sendCommand('POPLP+' + action.options.loadSlot);
 			}
 		};
 		
@@ -229,7 +224,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('PUSHLP=' + action.options.loadSlot);
+				self.sendCommand('PUSHLP+' + action.options.loadSlot);
 			}
 		};
 		
@@ -248,7 +243,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('FOCUS=' + action.options.focusAction);
+				self.sendCommand('FOCUS+' + action.options.focusAction);
 			}
 		};
 		
@@ -267,7 +262,7 @@ module.exports = {
 				}
 			],
 			callback: async function (action) {
-				self.sendCommand('ZOOM=' + action.options.zoomAction);
+				self.sendCommand('ZOOM+' + action.options.zoomAction);
 			}
 		};
 		
@@ -290,16 +285,16 @@ module.exports = {
 			callback: async function (action) {
 				let shiftAction = action.options.shiftAction;
 				if (shiftAction == '0') {
-					self.sendCommand('LENS=INC');
+					self.sendCommand('LENS+INC');
 				}
 				else if (shiftAction == '1') {
-					self.sendCommand('LENS=DEC');
+					self.sendCommand('LENS+DEC');
 				}
 				else if (shiftAction == '2') {
-					self.sendCommand('HLENS=DEC');
+					self.sendCommand('HLENS+DEC');
 				}
 				else if (shiftAction == '3') {
-					self.sendCommand('HLENS=INC');
+					self.sendCommand('HLENS+INC');
 				}
 			}
 		};
